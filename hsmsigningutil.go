@@ -31,13 +31,15 @@ type HSMSigning struct {
 	primaryHSMIP   uint32
 	secondaryHSMIP uint32
 	tcpPort        int
+	signKeyIndex   int16
 }
 
-func NewHSMSigningWithPort(primaryHSMLongIP uint32, secondaryHSMLongIP uint32, port int) *HSMSigning {
+func NewHSMSigningWithPort(primaryHSMLongIP uint32, secondaryHSMLongIP uint32, port int, signKeyIndex int16) *HSMSigning {
 	var h HSMSigning
 	h.primaryHSMIP = primaryHSMLongIP
 	h.secondaryHSMIP = secondaryHSMLongIP
 	h.tcpPort = port
+	h.signKeyIndex = signKeyIndex
 
 	fmt.Printf("Primary IP is: %d Secondary IP is: %d Port is: %d \n", h.primaryHSMIP, h.secondaryHSMIP, h.tcpPort)
 	return &h
@@ -47,10 +49,9 @@ func (h *HSMSigning) GenerateSignature(inputMessage string) {
 	hashOfInputData := hex.EncodeToString([]byte(inputMessage))
 	fmt.Println("SignData is", hashOfInputData)
 
-	var signKeyIndex int16 = 23
 	h.connectClient()
 
-	HSMSignature := h.generateSign(hashOfInputData, signKeyIndex, SHA256)
+	HSMSignature := h.generateSign(hashOfInputData, h.signKeyIndex, SHA256)
 	// fmt.Println("HSMSignature is:", HSMSignature)
 
 	body, err := hex.DecodeString(HSMSignature)
