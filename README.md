@@ -12,6 +12,7 @@
 	var hsmPrimaryIP uint32 = [long-ip]
 	var hsmSecondaryIP uint32 = [long-ip]
 	var hsmPort int = [port-number]
+	var signKeyIndex int16 = [some-index]
 
-	hsm := hsmutil.NewHSMSigningWithPort(hsmPrimaryIP, hsmSecondaryIP, hsmPort)
+	hsm := hsmutil.NewHSMSigningWithPort(hsmPrimaryIP, hsmSecondaryIP, hsmPort, signKeyIndex)
 	hsm.GenerateSignature(inputMessage)
