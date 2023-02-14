@@ -45,23 +45,24 @@ func NewHSMSigningWithPort(primaryHSMLongIP uint32, secondaryHSMLongIP uint32, p
 	return &h
 }
 
-func (h *HSMSigning) GenerateSignature(inputMessage string) {
+func (h *HSMSigning) GenerateSignature(inputMessage string) (string, error) {
 	hashOfInputData := hex.EncodeToString([]byte(inputMessage))
 	fmt.Println("SignData is", hashOfInputData)
 
 	h.connectClient()
 
 	HSMSignature := h.generateSign(hashOfInputData, h.signKeyIndex, SHA256)
-	// fmt.Println("HSMSignature is:", HSMSignature)
 
 	body, err := hex.DecodeString(HSMSignature)
 	if err != nil {
-		panic(fmt.Sprintf("Unable to generate signature - %s", err.Error()))
+		return "", err
 	}
 
 	//signature := base64.RawStdEncoding.EncodeToString(body)
 	signature := base64.StdEncoding.EncodeToString(body)
-	fmt.Println("Digital Signature is: ", signature)
+	// fmt.Println("Digital Signature is: ", signature)
+
+	return signature, nil
 }
 
 func (h *HSMSigning) generateSign(hexString string, signingKeyIndex int16, algorithm int) string {
