@@ -15,4 +15,5 @@
 	var signKeyIndex int16 = [some-index]
 
 	hsm := hsmutil.NewHSMSigningWithPort(hsmPrimaryIP, hsmSecondaryIP, hsmPort, signKeyIndex)
-	hsm.GenerateSignature(inputMessage)
+	signature,_ := hsm.GenerateSignature(inputMessage)
+	fmt.Println(signature)
